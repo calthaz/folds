@@ -1,0 +1,4 @@
+﻿{
+    "connectionString": "mongodb://localhost/folds-api",
+    "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, I killed a geko when I had fever one night."
+}
