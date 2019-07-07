@@ -15,8 +15,7 @@
             <router-link to="/login">Logout</router-link>
         </p>
         <image-upload form-title="Upload Avatar" upload-field-name = "avatar" 
-        v-bind:upload-function="uploadAvatar"
-        v-bind:callback="fileUploadCallback"></image-upload>
+        v-bind:upload-function="uploadAvatar"></image-upload>
     </div>
 </template>
 
@@ -28,7 +27,7 @@ import * as axios from 'axios';
 //import  * as temp from '../_helpers'
 import { authHeader } from '../helpers/index'
 import { userService } from '../services/user.service';
-import { uploadAvatar } from '../services/file-upload.service'
+//import { uploadAvatar } from '../services/file-upload.service'
 //console.log(temp);
 //{__esModule: true}
 //authHeader: (...)
@@ -79,12 +78,13 @@ export default {
         this.getAllUsers();
     },
     methods: {
-        uploadAvatar,
-        fileUploadCallback: userService.update,
         ...mapActions('users', {
             getAllUsers: 'getAll',
             deleteUser: 'delete'
         }),
+        ...mapActions('account', {
+            uploadAvatar: 'updateAvatar',
+        })
     },
 
     directives: {

@@ -1,5 +1,6 @@
 //import config from 'config';
 import { authHeader } from '../helpers/index';
+import * as axios from 'axios';
 const apiUrl = "http://localhost:4000";
 //console.log(authHeader);
 
@@ -11,7 +12,7 @@ export const userService = {
     getById,
     getByName,
     update,
-    //setImgSrc,
+    updateAvatar,
     delete: _delete
 };
 
@@ -86,6 +87,27 @@ function update(user) {
     };
 
     return fetch(`${apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);
+}
+
+function updateAvatar(id, formData) {
+    const url = `${apiUrl}/users/uploadAvatar`;
+    var config = {
+        headers: authHeader()
+    }
+    formData.append('id', id);
+    //console.log(formData);
+    return axios.post(url, formData, config)
+        // get data
+        .then(x => x.data)
+        .then(image => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.avatar = image.base64;
+            localStorage.setItem('user', JSON.stringify(user));
+            return image;
+        })
+        // add url field
+        //.then(x => x.map(img => Object.assign({},
+            //img, { url: `${BASE_URL}/images/${img.id}` })));
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

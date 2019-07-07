@@ -53,7 +53,7 @@ export default {
         focus: {
             // directive definition
             inserted: function (el) {
-                console.log("inserted directive");
+                //console.log("inserted directive");
                 el.focus()
             }
         }

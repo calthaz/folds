@@ -84,16 +84,18 @@ export default {
         },
         save(formData) {
             // upload data to the server
+            //console.log(this.uploadedFiles);
             this.currentStatus = STATUS_SAVING;
-            this.uploadFunction(this.account.user._id, formData).then(x => {
+            this.uploadFunction({id:this.account.user._id, formData}).then(x => {
                 this.uploadedFiles.push(x);
+                //console.log(x); //{url, base64}
                 this.currentStatus = STATUS_SUCCESS;
                 //TODO not actually working
-                this.callback({id:this.account.user._id, avatar: x.path});
+                //this.callback({id:this.account.user._id, image: x.base64});
             })
             .catch(err => {
                 console.log(err);
-                this.uploadError = err.response;
+                this.uploadError = err.message;//err.response;
                 this.currentStatus = STATUS_FAILED;
             });
         },

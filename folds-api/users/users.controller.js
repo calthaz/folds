@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const fileHelper = require('../_helpers/file-helper');
+const jwt = require('../_helpers/jwt');
 const sharp = require('sharp');
 
 const UPLOAD_PATH = 'uploads';
@@ -25,9 +26,9 @@ router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.get('/:idOrName', getByIdOrName);
-router.put('/:id', update);
+router.put('/:id', jwt(), update);
 router.delete('/:id', _delete);
-router.post('/uploadAvatar', upload.single('avatar'), updateAvatar);
+router.post('/uploadAvatar', jwt(), upload.single('avatar'), updateAvatar);
 
 module.exports = router;
 
@@ -105,7 +106,7 @@ function updateAvatar(req, res, next) {
             })
             .catch(err => next(err));
     }).catch( err => {
-        console.log(err);
+        next(err);
     });
 }
 

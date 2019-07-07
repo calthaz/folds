@@ -20,19 +20,6 @@ function upload(formData) {
             //img, { url: `${BASE_URL}/images/${img.id}` })));
 }
 
-function uploadAvatar(id, formData) {
-    const url = `${BASE_URL}/users/uploadAvatar`;
-    var config = {
-        headers: authHeader()
-    }
-    formData.append('id', id);
-    //console.log(formData);
-    return axios.post(url, formData, config)
-        // get data
-        .then(x => x.data)
-        // add url field
-        //.then(x => x.map(img => Object.assign({},
-            //img, { url: `${BASE_URL}/images/${img.id}` })));
-}
 
-export { upload, uploadAvatar }
+
+export { upload }
