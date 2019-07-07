@@ -29,6 +29,7 @@ router.get('/:idOrName', getByIdOrName);
 router.put('/:id', jwt(), update);
 router.delete('/:id', _delete);
 router.post('/uploadAvatar', jwt(), upload.single('avatar'), updateAvatar);
+router.post('/addCollection', jwt(), addCollection);
 
 module.exports = router;
 
@@ -110,6 +111,13 @@ function updateAvatar(req, res, next) {
     });
 }
 
+function addCollection(req, res, next){
+    userService.addCollection(req.body.id, req.body.collection)
+    .then((user) => {
+        res.json(user.collections)
+    })
+    .catch(err => next(err));
+}
 function _delete(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))

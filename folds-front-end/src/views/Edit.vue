@@ -16,28 +16,26 @@
         </p>
         <image-upload form-title="Upload Avatar" upload-field-name = "avatar" 
         v-bind:upload-function="uploadAvatar"></image-upload>
+        <h3>collections:</h3>
+        <div class='collection-list'>
+            <div v-for="collection in account.user.collections" :key="collection">
+                {{collection}}
+                <router-link :to="'/u/'+account.user.username+'/'+collection">Visit</router-link>
+            </div>
+        </div> 
+        <collection-creator></collection-creator> 
     </div>
 </template>
 
 <script>
 import ImageUpload from '../components/ImageUpload.vue'
 import UserBio from '../components/UserBio.vue'
+import CollectionCreator from '../components/CollectionCreator.vue'
 import { mapState, mapActions } from 'vuex'
 import * as axios from 'axios';
-//import  * as temp from '../_helpers'
 import { authHeader } from '../helpers/index'
 import { userService } from '../services/user.service';
-//import { uploadAvatar } from '../services/file-upload.service'
-//console.log(temp);
-//{__esModule: true}
-//authHeader: (...)
-//configureFakeBackend: (...)
-//router: (...)
-//console.log(authHeader);
-//undefined
 
-
-//axios.defaults.headers.common['Authorization'] = authHeader().Authorization;
 
 function setImgSrc(el, binding) {
 
@@ -64,7 +62,8 @@ function setImgSrc(el, binding) {
 export default {
     components:{
         ImageUpload,
-        UserBio
+        UserBio,
+        CollectionCreator
     },
 
     computed: {

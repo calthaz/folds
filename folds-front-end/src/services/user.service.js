@@ -13,6 +13,7 @@ export const userService = {
     getByName,
     update,
     updateAvatar,
+    addCollection,
     delete: _delete
 };
 
@@ -108,6 +109,23 @@ function updateAvatar(id, formData) {
         // add url field
         //.then(x => x.map(img => Object.assign({},
             //img, { url: `${BASE_URL}/images/${img.id}` })));
+}
+
+function addCollection(id, collection){
+    const url = `${apiUrl}/users/addCollection`;
+    var config = {
+        headers: authHeader()
+    }
+    //console.log(formData);
+    return axios.post(url, {id, collection}, config)
+        // get data
+        .then(x => x.data)
+        .then(allCollections => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.collections = allCollections;
+            localStorage.setItem('user', JSON.stringify(user));
+            return allCollections;
+        })
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

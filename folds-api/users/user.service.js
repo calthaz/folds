@@ -12,6 +12,7 @@ module.exports = {
     create,
     update,
     updateAvatar,
+    addCollection,
     delete: _delete
 };
 
@@ -90,6 +91,17 @@ async function updateAvatar(id, avatarString){
     Object.assign(user, {avatar: avatarString});
 
     await user.save();
+}
+
+async function addCollection(id, collection){
+    const user = await User.findById(id);
+    // validate
+    if (!user) throw 'User not found';
+
+    User.updateOne({ _id: id }, 
+        { $addToSet: { collections: collection.name } }, 
+        function(err) { console.log(err);});
+    return await User.findById(id).select('collections');
 }
 
 async function _delete(id) {

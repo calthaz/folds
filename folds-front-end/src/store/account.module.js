@@ -63,7 +63,26 @@ const actions = {
                     dispatch('alert/error', error, { root: true });
                 }
             );
-    }
+    },
+    addCollection({ dispatch, commit }, {id, collection}) {
+        commit('updateRequest');
+        //console.log('account module');
+        return userService.addCollection(id, collection)
+            .then(
+                image => {
+                    commit('updateSuccess');
+                    //router.push('/login');
+                    dispatch('alert/success', 'Update successful.', { root: true });
+                    return new Promise(function(resolve, reject) {
+                        resolve(image);
+                    });
+                },
+                error => {
+                    commit('updateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    },
 };
 
 const mutations = {
