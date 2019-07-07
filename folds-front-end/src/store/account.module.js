@@ -40,6 +40,7 @@ const actions = {
                     })
                 },
                 error => {
+                    //console.log("breakpoint");
                     commit('registerFailure', error);
                     dispatch('alert/error', error, { root: true });
                 }

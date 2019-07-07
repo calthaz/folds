@@ -12,10 +12,9 @@
     <div v-if="user">
         <user-bio :fullName="user.fullName" :avatar="user.avatar" :bio="user.bio"></user-bio>
         <div class='collection-list'>
-            <div v-for="collection in user.collections" :key="collection.title">
-                 <img :src="user.avatar"/>
-                {{collection.title}}
-                <router-link :to="'/u/'+user.username+'/'+collection.title">Visit</router-link>
+            <div v-for="collection in user.collections" :key="collection">
+                {{collection}}
+                <router-link :to="'/u/'+user.username+'/'+collection">Visit</router-link>
             </div>
         </div>    
     </div>

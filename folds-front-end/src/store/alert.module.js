@@ -7,8 +7,13 @@ const actions = {
     success({ commit }, message) {
         commit('success', message);
     },
-    error({ commit }, message) {
-        commit('error', message);
+    error({ commit }, error) {
+        //console.log('break point');
+        if(error.isAxiosError){
+            commit('error', error.response.data.message)
+        }else{
+            commit('error', error);
+        }
     },
     clear({ commit }, message) {
         commit('success', message);

@@ -98,9 +98,22 @@ async function addCollection(id, collection){
     // validate
     if (!user) throw 'User not found';
 
-    User.updateOne({ _id: id }, 
+    let updateError=null;
+    let updateResult = null;
+    await User.updateOne({ _id: id }, 
         { $addToSet: { collections: collection.name } }, 
-        function(err) { console.log(err);});
+        (err, result) => { 
+            //if(err) throw err;//throw to mongodb utils.js
+            //else if (result && result.nModified==0){
+                //throw 'Collection name already exist.';
+            //}
+            updateError = err;
+            updateResult = result;
+        });
+    if(updateError) throw err;
+    else if (updateResult && updateResult.nModified==0){
+        throw 'Collection name already exists.';
+    }
     return await User.findById(id).select('collections');
 }
 
