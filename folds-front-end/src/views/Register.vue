@@ -12,9 +12,9 @@
                 <textarea type="text" v-model="user.bio" name="bio"></textarea>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" v-model="user.email" v-validate="'required'" name="email" class="form-control" :class="{ 'is-invalid': submitted && errors.has('email') }" />
-                <div v-if="submitted && errors.has('email')" class="invalid-feedback">{{ errors.first('email') }}</div>
+                <label for="username">Username</label>
+                <input type="text" v-model="user.username" v-validate="'required'" name="username" class="form-control" :class="{ 'is-invalid': submitted && errors.has('username') }" />
+                <div v-if="submitted && errors.has('username')" class="invalid-feedback">{{ errors.first('username') }}</div>
             </div>
             <div class="form-group">
                 <label htmlFor="password">Password</label>
@@ -39,7 +39,7 @@ export default {
             user: {
                 fullName: '',
                 bio: '',
-                email: '',
+                username: '',
                 password: ''
             },
             submitted: false

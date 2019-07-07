@@ -3,9 +3,9 @@
         <h2>Login</h2>
         <form @submit.prevent="handleSubmit">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" v-focus v-model="email" name="email" class="form-control" :class="{ 'is-invalid': submitted && !email }" />
-                <div v-show="submitted && !email" class="invalid-feedback">Email is required</div>
+                <label for="username">Username</label>
+                <input type="text" v-focus v-model="username" name="username" class="form-control" :class="{ 'is-invalid': submitted && !username }" />
+                <div v-show="submitted && !username" class="invalid-feedback">username is required</div>
             </div>
             <div class="form-group">
                 <label htmlFor="password">Password</label>
@@ -27,7 +27,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
     data () {
         return {
-            email: '',
+            username: '',
             password: '',
             submitted: false
         }
@@ -43,9 +43,9 @@ export default {
         ...mapActions('account', ['login', 'logout']),
         handleSubmit (e) {
             this.submitted = true;
-            const { email, password } = this;
-            if (email && password) {
-                this.login({ email, password })
+            const { username, password } = this;
+            if (username && password) {
+                this.login({ username, password })
             }
         }
     },
