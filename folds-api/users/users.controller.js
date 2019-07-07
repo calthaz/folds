@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const fileHelper = require('../_helpers/file-helper');
+const sharp = require('sharp');
 
 const UPLOAD_PATH = 'uploads';
 var storage = multer.diskStorage({
@@ -68,17 +69,30 @@ function update(req, res, next) {
 
 function updateAvatar(req, res, next) {
     var img = fs.readFileSync(req.file.path);
-    var encode_image = img.toString('base64');
-    var mimeType = path.extname(req.file.path).substr(1);
-     // Define a JSONobject for the image attributes for saving to database
-    
-    var finalImg = 'data:' + mimeType + ';base64,' + encode_image;
-    userService.updateAvatar(req.body.id, finalImg)
-        .then(() => {
-            fileHelper.unlinkFile(req.file.path);
-            res.json({url: req.file.path, base64: finalImg})
-        })
-        .catch(err => next(err));
+    sharp(img)
+    .resize(200, 200, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 }
+    })
+    .toBuffer()
+    .then(function(outputBuffer) {
+        // outputBuffer contains JPEG image data
+        //
+        //console.log(outputBuffer);
+        var encode_image = outputBuffer.toString('base64');
+        var mimeType = path.extname(req.file.path).substr(1);
+         // Define a JSONobject for the image attributes for saving to database
+        
+        var finalImg = 'data:' + mimeType + ';base64,' + encode_image;
+        userService.updateAvatar(req.body.id, finalImg)
+            .then(() => {
+                fileHelper.unlinkFile(req.file.path).catch(err => console.log(err));
+                res.json({url: req.file.path, base64: finalImg})
+            })
+            .catch(err => next(err));
+    }).catch( err => {
+        console.log(err);
+    });
 }
 
 function _delete(req, res, next) {
