@@ -9,6 +9,7 @@ export const userService = {
     register,
     getAll,
     getById,
+    getByName,
     update,
     //setImgSrc,
     delete: _delete
@@ -66,6 +67,15 @@ function getById(id) {
     };
 
     return fetch(`${apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+}
+
+function getByName(username) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${apiUrl}/users/${username}`, requestOptions).then(handleResponse);
 }
 
 function update(user) {

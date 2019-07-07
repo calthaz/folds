@@ -24,7 +24,7 @@ router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
-router.get('/:id', getById);
+router.get('/:idOrName', getByIdOrName);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 router.post('/uploadAvatar', upload.single('avatar'), updateAvatar);
@@ -55,9 +55,23 @@ function getCurrent(req, res, next) {
         .catch(err => next(err));
 }
 
-function getById(req, res, next) {
-    userService.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
+function getByIdOrName(req, res, next) {
+    //console.log(req.params);
+        userService.getById(req.params.idOrName)
+        .then(user => {
+            if(user){
+                res.json(user) 
+            } else{
+                userService.getByName(req.params.idOrName)
+                .then(user => {
+                    if(user){
+                        res.json(user) 
+                    } else{
+                        res.sendStatus(404)
+                    } 
+                })
+            } 
+        })
         .catch(err => next(err));
 }
 

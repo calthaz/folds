@@ -1,8 +1,6 @@
 <template>
     <div>
-        <h1>Hi {{account.user.fullName}}!</h1>
-        <img :src="account.user.avatar"/>
-        <p>{{account.user.bio}}</p>
+        <user-bio :fullName="account.user.fullName" :avatar="account.user.avatar" :bio="account.user.bio"></user-bio>
         <h3>Users from secure api end point:</h3>
         <em v-if="users.loading">Loading users...</em>
         <span v-if="users.error" class="text-danger">ERROR: {{users.error}}</span>
@@ -24,6 +22,7 @@
 
 <script>
 import ImageUpload from '../components/ImageUpload.vue'
+import UserBio from '../components/UserBio.vue'
 import { mapState, mapActions } from 'vuex'
 import * as axios from 'axios';
 //import  * as temp from '../_helpers'
@@ -65,7 +64,8 @@ function setImgSrc(el, binding) {
 
 export default {
     components:{
-        ImageUpload
+        ImageUpload,
+        UserBio
     },
 
     computed: {

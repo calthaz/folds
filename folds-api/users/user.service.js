@@ -8,6 +8,7 @@ module.exports = {
     authenticate,
     getAll,
     getById,
+    getByName,
     create,
     update,
     updateAvatar,
@@ -16,7 +17,7 @@ module.exports = {
 
 async function authenticate({ username, password }) {
     const user = await User.findOne({ username });
-    console.log(password);
+    //console.log(password);
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
@@ -32,7 +33,16 @@ async function getAll() {
 }
 
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        return await User.findById(id).select('-hash');
+    }else{
+        return null;
+    }
+}
+
+async function getByName(username){
+    return await User.findOne({ username: username }).select('-hash');
 }
 
 async function create(userParam) {
