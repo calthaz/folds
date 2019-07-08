@@ -12,10 +12,9 @@
     <div v-if="user">
         <user-bio :fullName="user.fullName" :avatar="user.avatar" :bio="user.bio"></user-bio>
         <div class='collection-list'>
-            <div v-for="collection in user.collections" :key="collection">
-                {{collection}}
-                <router-link :to="'/u/'+user.username+'/'+collection">Visit</router-link>
-            </div>
+            <collection-preview v-for="collection in user.collections" :key="collection"
+            :name='collection' :username='user.username'>
+            </collection-preview>
         </div>    
     </div>
 </div>    
@@ -23,12 +22,14 @@
 
 <script>
 import UserBio from '../components/UserBio.vue'
+import CollectionPreview from '../components/CollectionPreview.vue'
 import { mapState, mapActions } from 'vuex'
 import { userService } from '../services/user.service'
 
 export default {
     components:{
-        UserBio
+        UserBio,
+        CollectionPreview
     },
 
     data () {
@@ -56,6 +57,8 @@ export default {
                 this.loading = false
                 this.user = user
             }).catch(err=>{
+                this.error=err;
+                this.loading = false;
                 console.log(err);
             })
         }

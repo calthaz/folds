@@ -1,7 +1,6 @@
 ﻿const express = require('express');
 const router = express.Router();
 const collectionService = require('./collection.service');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const fileHelper = require('../_helpers/file-helper');
