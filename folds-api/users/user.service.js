@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const User = db.User;
+const collectionService = require('../collections/collection.service');
 
 module.exports = {
     authenticate,
@@ -11,7 +12,7 @@ module.exports = {
     getByName,
     create,
     update,
-    updateAvatar,
+    //updateAvatar,
     addCollection,
     delete: _delete
 };
@@ -114,6 +115,7 @@ async function addCollection(id, collection){
     else if (updateResult && updateResult.nModified==0){
         throw 'Collection name already exists.';
     }
+    collectionService.create({...collection, owner: user.username});
     return await User.findById(id).select('collections');
 }
 

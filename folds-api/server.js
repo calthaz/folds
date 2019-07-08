@@ -2,24 +2,9 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const multer = require('multer');
-const path = require('path');
 const bodyParser = require('body-parser');
-const jwt = require('_helpers/jwt');
 const errorHandler = require('_helpers/error-handler');
-
-const UPLOAD_PATH = 'uploads';
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, UPLOAD_PATH)
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now()+path.extname(file.originalname))
-    }
-  })
-   
-const upload = multer({ storage: storage })//configuration
-
+const upload = require('_helpers/upload');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -30,6 +15,7 @@ app.use(cors());
 
 // api routes
 app.use('/users', require('./users/users.controller'));
+app.use('/collections', require('./collections/collections.controller'));
 
 app.use('/echo', require('./_helpers/post-handler'))
 // global error handler

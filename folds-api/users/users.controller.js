@@ -1,30 +1,18 @@
 ﻿const express = require('express');
 const router = express.Router();
 const userService = require('./user.service');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const fileHelper = require('../_helpers/file-helper');
 const jwt = require('../_helpers/jwt');
 const sharp = require('sharp');
+const upload = require('../_helpers/upload');
 
-const UPLOAD_PATH = 'uploads';
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, UPLOAD_PATH)
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now()+path.extname(file.originalname))
-    }
-  })
-   
-const upload = multer({ storage: storage })//configuration
 
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.get('/', getAll);
-router.get('/current', getCurrent);
 router.get('/:idOrName', getByIdOrName);
 router.put('/:id', jwt(), update);
 router.delete('/:id', _delete);
@@ -100,7 +88,7 @@ function updateAvatar(req, res, next) {
          // Define a JSONobject for the image attributes for saving to database
         
         var finalImg = 'data:' + mimeType + ';base64,' + encode_image;
-        userService.updateAvatar(req.body.id, finalImg)
+        userService.update(req.body.id, {avatar:finalImg})
             .then(() => {
                 fileHelper.unlinkFile(req.file.path).catch(err => console.log(err));
                 res.json({url: req.file.path, base64: finalImg})
@@ -118,6 +106,7 @@ function addCollection(req, res, next){
     })
     .catch(err => next(err));
 }
+
 function _delete(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))
