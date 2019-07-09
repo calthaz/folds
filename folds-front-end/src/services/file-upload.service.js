@@ -4,10 +4,10 @@
 import * as axios from 'axios';
 import { authHeader } from '../helpers/index'
 
-const BASE_URL = 'http://localhost:4000';
+import {apiUrl} from '../helpers/api-config'
 
 function upload(formData) {
-    const url = `${BASE_URL}/uploads`;
+    const url = `${apiUrl}/uploads`;
     var config = {
         headers: authHeader()
     }

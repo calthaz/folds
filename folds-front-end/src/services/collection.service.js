@@ -1,7 +1,7 @@
 //import config from 'config';
 import { authHeader } from '../helpers/index';
 import * as axios from 'axios';
-const apiUrl = "http://localhost:4000";
+import {apiUrl} from '../helpers/api-config'
 //console.log(authHeader);
 
 export const collectionService = {

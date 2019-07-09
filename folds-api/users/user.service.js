@@ -121,10 +121,10 @@ async function addCollection(id, collection){
 }
 
 async function deleteCollection(collectionId){
-    console.log(collectionId);
+    //console.log(collectionId);
     const collection = await collectionService.getById(collectionId);
     if (!collection) throw 'Collection not found.';
-    console.log(collection.name+" | "+collection.owner);
+    //console.log(collection.name+" | "+collection.owner);
     const user = await User.findOne({username: collection.owner});
     if (!user) throw 'User not found.';
 

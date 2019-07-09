@@ -4,10 +4,12 @@ import App from './App.vue'
 import {router} from './router'
 //console.log('breakpoint');
 import {store} from './store/index.js'
+import {apiUrl} from './helpers/api-config'
 
 Vue.config.productionTip = false
 
 Vue.use(VeeValidate);
+Vue.prototype.$hostname = apiUrl;
 
 new Vue({
   router,

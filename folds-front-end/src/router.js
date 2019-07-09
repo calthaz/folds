@@ -5,6 +5,7 @@ import LoginPage from './views/Login.vue'
 import RegisterPage from './views/Register.vue'
 import EditPage from './views/Edit.vue'
 import OverviewPage from './views/Overview.vue'
+import CollectionPage from './views/Collection.vue'
 
 Vue.use(Router)
 
@@ -28,8 +29,8 @@ export const router = new Router({
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
     { path: '/edit', component: EditPage },
-    {path: '/u/:username', component: OverviewPage}, 
-
+    { path: '/u/:username', component: OverviewPage}, 
+    { path: '/u/:username/:collectionName', component: CollectionPage},
     // otherwise redirect to home
     { path: '*', redirect: '/' }
   ]

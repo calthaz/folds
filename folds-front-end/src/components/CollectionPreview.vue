@@ -11,7 +11,7 @@
         </div>
 
         <div v-if="collection">
-            <img v-auth-img="collection.bg">
+            <img :src="$hostname+collection.bg">
             <span>{{collection.intro}}</span>
             <a v-if="deleteFunction" href="javascript:void(0)" 
             @click="deleteFunction(collection.id)" class="text-danger">Delete</a>
@@ -22,9 +22,10 @@
 <script>
 import {collectionService} from '../services/collection.service';
 import * as axios from 'axios';
+import {apiUrl} from '../helpers/api-config'
 
 function setImgSrc(el, binding) {
-    const apiUrl = "http://localhost:4000"
+    //const apiUrl = "http://localhost:4000"
     console.log("try to get image. at "+binding.value);
     if (binding.oldValue === undefined || binding.value !== binding.oldValue) {
     var imageUrl = apiUrl+binding.value;
