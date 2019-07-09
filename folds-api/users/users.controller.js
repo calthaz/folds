@@ -18,6 +18,7 @@ router.put('/:id', jwt(), update);
 router.delete('/:id', _delete);
 router.post('/uploadAvatar', jwt(), upload.single('avatar'), updateAvatar);
 router.post('/addCollection', jwt(), addCollection);
+router.post('/deleteCollection', jwt(), deleteCollection);
 
 module.exports = router;
 
@@ -101,6 +102,14 @@ function updateAvatar(req, res, next) {
 
 function addCollection(req, res, next){
     userService.addCollection(req.body.id, req.body.collection)
+    .then((user) => {
+        res.json(user.collections)
+    })
+    .catch(err => next(err));
+}
+
+function deleteCollection(req, res, next){
+    userService.deleteCollection(req.body.collectionId)
     .then((user) => {
         res.json(user.collections)
     })

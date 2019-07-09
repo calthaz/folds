@@ -9,7 +9,7 @@ export const collectionService = {
     getById,
     getByUserAndName,
     update,
-    delete: _delete
+    //delete: _delete
 };
 
 
@@ -52,14 +52,14 @@ function update(collection) {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+/*function _delete(id) {
     const requestOptions = {
         method: 'DELETE',
         headers: authHeader()
     };
-
+    console.log(id);
     return fetch(`${apiUrl}/collections/${id}`, requestOptions).then(handleResponse);
-}
+}*/
 
 function handleResponse(response) {
     return response.text().then(text => {

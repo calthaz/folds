@@ -14,6 +14,7 @@ module.exports = {
     update,
     //updateAvatar,
     addCollection,
+    deleteCollection,
     delete: _delete
 };
 
@@ -117,6 +118,34 @@ async function addCollection(id, collection){
     }
     collectionService.create({...collection, owner: user.username});
     return await User.findById(id).select('collections');
+}
+
+async function deleteCollection(collectionId){
+    console.log(collectionId);
+    const collection = await collectionService.getById(collectionId);
+    if (!collection) throw 'Collection not found.';
+    console.log(collection.name+" | "+collection.owner);
+    const user = await User.findOne({username: collection.owner});
+    if (!user) throw 'User not found.';
+
+    let updateError=null;
+    let updateResult = null;
+    await User.updateOne({ _id: user.id }, 
+        { $pull: { collections: collection.name } }, 
+        (err, result) => { 
+            //if(err) throw err;//throw to mongodb utils.js
+            //else if (result && result.nModified==0){
+                //throw 'Collection name already exist.';
+            //}
+            updateError = err;
+            updateResult = result;
+        });
+    if(updateError) throw err;
+    else if (updateResult && updateResult.nModified==0){
+        throw 'User does not have this collection';
+    }
+    collectionService.delete(collectionId);
+    return await User.findById(user.id).select('collections');
 }
 
 async function _delete(id) {

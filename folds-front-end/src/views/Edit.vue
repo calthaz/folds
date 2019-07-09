@@ -19,7 +19,7 @@
         <h3>collections:</h3>
         <div class='collection-list'>
             <collection-preview v-for="collection in account.user.collections" :key="collection"
-            :name='collection' :username='account.user.username'>
+            :name='collection' :username='account.user.username' v-bind:deleteFunction="deleteCollection">
             </collection-preview>
         </div> 
         <collection-creator></collection-creator> 
@@ -35,6 +35,7 @@ import { mapState, mapActions } from 'vuex'
 import * as axios from 'axios';
 import { authHeader } from '../helpers/index'
 import { userService } from '../services/user.service';
+import { collectionService } from '../services/collection.service';
 
 export default {
     components:{
@@ -61,7 +62,9 @@ export default {
         }),
         ...mapActions('account', {
             uploadAvatar: 'updateAvatar',
-        })
+            deleteCollection: 'deleteCollection'
+        }),
+        //deleteCollection: collectionService.delete //should be an account update method....
     }
 };
 </script>

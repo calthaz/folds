@@ -14,6 +14,7 @@ export const userService = {
     update,
     updateAvatar,
     addCollection,
+    deleteCollection,
     delete: _delete
 };
 
@@ -118,6 +119,24 @@ function addCollection(id, collection){
     }
     //console.log(formData);
     return axios.post(url, {id, collection}, config)
+        // get data
+        .then(x => x.data)
+        .then(allCollections => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.collections = allCollections;
+            localStorage.setItem('user', JSON.stringify(user));
+            return allCollections;
+        })
+}
+
+function deleteCollection(collectionId){
+    console.log('user.service');
+    const url = `${apiUrl}/users/deleteCollection`;
+    var config = {
+        headers: authHeader()
+    }
+    //console.log(formData);
+    return axios.post(url, {collectionId}, config)
         // get data
         .then(x => x.data)
         .then(allCollections => {

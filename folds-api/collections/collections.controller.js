@@ -12,9 +12,9 @@ const sharp = require('sharp');
 router.get('/', getAll);
 router.get('/:id', getById);
 router.get('/:username/:name', getByUserAndName);
-router.put('/:id', jwt(), update);
+//router.put('/:id', jwt(), update);
 //router.put('/:username/:name', jwt(), getByUserAndName);
-router.delete('/:id', _delete);
+//router.delete('/:id', _delete);
 
 module.exports = router;
 

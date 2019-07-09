@@ -54,5 +54,5 @@ async function update(id, collectionParam) {
 }
 
 async function _delete(id) {
-    await collection.findByIdAndRemove(id);
+    await Collection.findByIdAndRemove(id);
 }

@@ -70,12 +70,31 @@ const actions = {
         //console.log('account module');
         return userService.addCollection(id, collection)
             .then(
-                image => {
+                collections => {
                     commit('updateSuccess');
                     //router.push('/login');
                     dispatch('alert/success', 'Update successful.', { root: true });
                     return new Promise(function(resolve, reject) {
-                        resolve(image);
+                        resolve(collections);
+                    });
+                },
+                error => {
+                    commit('updateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    },
+    deleteCollection({ dispatch, commit }, collectionId) {
+        commit('updateRequest');
+        console.log('account module');
+        return userService.deleteCollection(collectionId)
+            .then(
+                collections => {
+                    commit('updateSuccess');
+                    //router.push('/login');
+                    dispatch('alert/success', 'Update successful.', { root: true });
+                    return new Promise(function(resolve, reject) {
+                        resolve(collections);
                     });
                 },
                 error => {

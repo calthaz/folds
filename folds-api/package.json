@@ -1,7 +1,7 @@
 {
-    "name": "node-mongo-registration-login-api",
+    "name": "folds-api",
     "version": "1.0.0",
-    "description": "NodeJS + MongoDB API for User Management, Authentication and Registration",
+    "description": "API for online portfolio",
     "license": "MIT",
     "repository": {
         "type": "git",

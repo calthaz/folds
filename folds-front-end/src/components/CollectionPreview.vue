@@ -13,6 +13,8 @@
         <div v-if="collection">
             <img v-auth-img="collection.bg">
             <span>{{collection.intro}}</span>
+            <a v-if="deleteFunction" href="javascript:void(0)" 
+            @click="deleteFunction(collection.id)" class="text-danger">Delete</a>
         </div>
     </div>
 </template>
@@ -48,8 +50,8 @@ export default {
     props: {
         name: String,
         username: String,
-        update: Function,
-        delete: Function
+        updateFunction: Function,
+        deleteFunction: Function
     },
     data () {
         return {
