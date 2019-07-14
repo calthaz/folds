@@ -73,7 +73,7 @@ const actions = {
                 collections => {
                     commit('updateSuccess');
                     //router.push('/login');
-                    dispatch('alert/success', 'Update successful.', { root: true });
+                    dispatch('alert/success', 'Add collection successful.', { root: true });
                     return new Promise(function(resolve, reject) {
                         resolve(collections);
                     });
@@ -86,15 +86,53 @@ const actions = {
     },
     deleteCollection({ dispatch, commit }, collectionId) {
         commit('updateRequest');
-        console.log('account module');
+        //console.log('account module');
         return userService.deleteCollection(collectionId)
             .then(
                 collections => {
                     commit('updateSuccess');
                     //router.push('/login');
-                    dispatch('alert/success', 'Update successful.', { root: true });
+                    dispatch('alert/success', 'Delete collection successful.', { root: true });
                     return new Promise(function(resolve, reject) {
                         resolve(collections);
+                    });
+                },
+                error => {
+                    commit('updateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    },
+    addBundle({ dispatch, commit }, {id, type, bundle}) {
+        commit('updateRequest');
+        //console.log('account module');
+        return userService.addBundle(id, type, bundle)
+            .then(
+                bundles => {
+                    commit('updateSuccess');
+                    //router.push('/login');
+                    dispatch('alert/success', `Add ${type} bundle successful.`, { root: true });
+                    return new Promise(function(resolve, reject) {
+                        resolve(bundles);
+                    });
+                },
+                error => {
+                    commit('updateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    },
+    deleteBundle({ dispatch, commit }, {type, bundleId}) {
+        commit('updateRequest');
+        //console.log('account module');
+        return userService.deleteBundle(type, bundleId)
+            .then(
+                bundles => {
+                    commit('updateSuccess');
+                    //router.push('/login');
+                    dispatch('alert/success', 'Delete bundle successful.', { root: true });
+                    return new Promise(function(resolve, reject) {
+                        resolve(bundles);
                     });
                 },
                 error => {

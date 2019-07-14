@@ -15,6 +15,8 @@ export const userService = {
     updateAvatar,
     addCollection,
     deleteCollection,
+    addBundle,
+    deleteBundle,
     delete: _delete
 };
 
@@ -130,7 +132,7 @@ function addCollection(id, collection){
 }
 
 function deleteCollection(collectionId){
-    console.log('user.service');
+    //console.log('user.service');
     const url = `${apiUrl}/users/deleteCollection`;
     var config = {
         headers: authHeader()
@@ -144,6 +146,51 @@ function deleteCollection(collectionId){
             user.collections = allCollections;
             localStorage.setItem('user', JSON.stringify(user));
             return allCollections;
+        })
+}
+
+function addBundle(id, type, bundle){
+    const url = `${apiUrl}/users/addBundle`;
+    var config = {
+        headers: authHeader()
+    }
+    //console.log(formData);
+    return axios.post(url, {id, type, bundle}, config)
+        // get data
+        .then(x => x.data)
+        .then(allBundles => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(type=="image"){
+                user.imageBundles = allBundles;
+            }else if(type=="text"){
+                user.textBundles = allBundles;
+            }
+            
+            localStorage.setItem('user', JSON.stringify(user));
+            return allBundles;
+        })
+}
+
+function deleteBundle(type, bundleId){
+    //console.log('user.service');
+    const url = `${apiUrl}/users/deleteBundle`;
+    var config = {
+        headers: authHeader()
+    }
+    //console.log(formData);
+    return axios.post(url, {type, bundleId}, config)
+        // get data
+        .then(x => x.data)
+        .then(allBundles => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(type=="image"){
+                user.imageBundles = allBundles;
+            }else if(type=="text"){
+                user.textBundles = allBundles;
+            }
+            
+            localStorage.setItem('user', JSON.stringify(user));
+            return allBundles;
         })
 }
 

@@ -19,6 +19,9 @@ router.delete('/:id', _delete);
 router.post('/uploadAvatar', jwt(), upload.single('avatar'), updateAvatar);
 router.post('/addCollection', jwt(), addCollection);
 router.post('/deleteCollection', jwt(), deleteCollection);
+router.post('/addBundle', jwt(), addBundle);
+router.post('/deleteBundle', jwt(), deleteBundle);
+
 
 module.exports = router;
 
@@ -112,6 +115,22 @@ function deleteCollection(req, res, next){
     userService.deleteCollection(req.body.collectionId)
     .then((user) => {
         res.json(user.collections)
+    })
+    .catch(err => next(err));
+}
+
+function addBundle(req, res, next){
+    userService.addBundle(req.body.id, req.body.type, req.body.bundle)
+    .then((user) => {
+        res.json(user[`${req.body.type}Bundles`])
+    })
+    .catch(err => next(err));
+}
+
+function deleteBundle(req, res, next){
+    userService.deleteBundle(req.body.type, req.body.bundleId)
+    .then((user) => {
+        res.json(user[`${req.body.type}Bundles`])
     })
     .catch(err => next(err));
 }

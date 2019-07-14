@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const User = db.User;
 const collectionService = require('../collections/collection.service');
+const bundleService = require('../bundles/bundle.service');
 
 module.exports = {
     authenticate,
@@ -15,6 +16,8 @@ module.exports = {
     //updateAvatar,
     addCollection,
     deleteCollection,
+    addBundle,
+    deleteBundle,
     delete: _delete
 };
 
@@ -85,16 +88,6 @@ async function update(id, userParam) {
     await user.save();
 }
 
-async function updateAvatar(id, avatarString){
-    const user = await User.findById(id);
-    // validate
-    if (!user) throw 'User not found';
-    // copy userParam properties to user
-    Object.assign(user, {avatar: avatarString});
-
-    await user.save();
-}
-
 async function addCollection(id, collection){
     const user = await User.findById(id);
     // validate
@@ -112,7 +105,7 @@ async function addCollection(id, collection){
             updateError = err;
             updateResult = result;
         });
-    if(updateError) throw err;
+    if(updateError) throw updateError;
     else if (updateResult && updateResult.nModified==0){
         throw 'Collection name already exists.';
     }
@@ -133,19 +126,88 @@ async function deleteCollection(collectionId){
     await User.updateOne({ _id: user.id }, 
         { $pull: { collections: collection.name } }, 
         (err, result) => { 
-            //if(err) throw err;//throw to mongodb utils.js
-            //else if (result && result.nModified==0){
-                //throw 'Collection name already exist.';
-            //}
             updateError = err;
             updateResult = result;
         });
-    if(updateError) throw err;
+    if(updateError) throw updateError;
     else if (updateResult && updateResult.nModified==0){
         throw 'User does not have this collection';
     }
     collectionService.delete(collectionId);
     return await User.findById(user.id).select('collections');
+}
+
+async function addBundle(id, bundleType, bundle){
+    const user = await User.findById(id);
+    if (!user) throw 'User not found.';
+
+    let createdBundle = await bundleService.create(bundleType, {...bundle, owner: user.username});
+    if (!createdBundle) throw 'Bundle cannot be created.'
+
+    let updateError = null;
+    let updateResult = null;
+    if(bundleType=="image"){
+        await User.updateOne({ _id: id }, 
+                { $push: { imageBundles: createdBundle.id } }, 
+                (err, result) => { 
+                    updateError = err;
+                    updateResult = result;
+                });
+    }else if(bundleType=="text"){
+        await User.updateOne({ _id: id }, 
+            { $push: { textBundles: createdBundle.id } }, 
+            (err, result) => { 
+                updateError = err;
+                updateResult = result;
+            });
+    }else {
+        throw "Bundle type not supported."
+    }
+    
+    if(updateError) {
+        bundleService.delete(createdBundle.id);
+        throw updateError;
+    }
+    else if (updateResult && updateResult.nModified==0){
+        bundleService.delete(createdBundle.id);
+        throw 'Somehow this bundle cannot be added to the user.';
+    }
+    return await User.findById(id).select(`${bundleType}Bundles`);
+}
+
+async function deleteBundle(bundleType, bundleId){
+    //console.log(collectionId);
+    const bundle = await bundleService.getByTypeAndId(bundleType, bundleId);
+    if (!bundle) throw 'Bundle not found.';
+    //console.log(collection.name+" | "+collection.owner);
+    const user = await User.findOne({username: bundle.owner});
+    if (!user) throw 'User not found.';
+
+    let updateError=null;
+    let updateResult = null;
+    if(bundleType=="image"){
+        await User.updateOne({ _id: user.id }, 
+                { $pull: { imageBundles: bundle.id } }, 
+                (err, result) => { 
+                    updateError = err;
+                    updateResult = result;
+                });
+    }else if(bundleType=="text"){
+        await User.updateOne({ _id: user.id }, 
+            { $pull: { textBundles: bundle.id } }, 
+            (err, result) => { 
+                updateError = err;
+                updateResult = result;
+            });
+    }else {
+        throw "Bundle type not supported."
+    }
+    if(updateError) throw updateError;
+    else if (updateResult && updateResult.nModified==0){
+        throw 'User does not have this bundle';
+    }
+    bundleService.delete(bundleType, bundleId);
+    return await User.findById(user.id).select(`${bundleType}Bundles`);
 }
 
 async function _delete(id) {

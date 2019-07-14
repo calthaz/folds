@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3> create collection {{collection.name}}</h3>
+        <h3> create collection </h3>
         <v-form ref="form" lazy-validation>
             <v-text-field v-model="collection.name"
             label="Collection Name"
@@ -40,9 +40,7 @@ export default {
         handleSubmit(e) {
             if(this.$refs.form.validate()){
                 this.submitted = true;
-                console.log(this.collection);
                 this.addCollection({id:this.user._id, collection:this.collection});
-                this.$refs.form.reset()
             }
         }
     }

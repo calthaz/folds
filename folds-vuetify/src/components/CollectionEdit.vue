@@ -23,7 +23,9 @@
         </v-img>
             <v-card-title v-if="collection">{{collection.intro}}</v-card-title>
             <v-card-actions v-if="collection" >
-                <v-btn flat :to="'/u/'+username+'/'+name">Visit</v-btn>
+                <v-btn flat :to="'/editCollection/'+name">Visit</v-btn>
+                <v-btn v-if="deleteFunction" flat color="warning" 
+                @click="deleteFunction(collection.id)">Delete</v-btn>
             </v-card-actions>
     </v-card>
 </v-flex>
@@ -34,54 +36,20 @@ import {collectionService} from '../services/collection.service';
 import * as axios from 'axios';
 import {apiUrl} from '../helpers/api-config'
 
-function setImgSrc(el, binding) {
-    //const apiUrl = "http://localhost:4000"
-    console.log("try to get image. at "+binding.value);
-    if (binding.oldValue === undefined || binding.value !== binding.oldValue) {
-    var imageUrl = apiUrl+binding.value;
-    var config = {
-        //headers: authHeader()
-    }
-    axios.get(imageUrl, {
-        responseType: 'arraybuffer',
-        //headers: authHeader()
-    })
-    .then(function(resp) {
-        var mimeType = resp.headers['content-type'].toLowerCase();
-        var imgBase64 = new Buffer(resp.data, 'binary').toString('base64');
-        el.src = 'data:' + mimeType + ';base64,' + imgBase64;
-    }).catch((function() {
-        el.src = imageUrl;
-    }));
-    }
-}
 
 export default {
-    name: 'CollectionPreview',
+    name: 'CollectionEdit',
     props: {
         name: String,
         username: String,
-        //updateFunction: Function,
-        //deleteFunction: Function
+        updateFunction: Function,
+        deleteFunction: Function
     },
     data () {
         return {
             collection: null,
             loading: false,
             error: null
-        }
-    },
-    directives: {
-        authImg: {
-            // directive definition
-            bind: function(el, binding) {
-                //console.log("try to get image.");
-                setImgSrc(el, binding);
-            },
-            componentUpdated: function(el, binding) {
-                //console.log("try to get image.");
-                setImgSrc(el, binding);
-            }
         }
     },
     created () {

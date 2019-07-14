@@ -16,6 +16,7 @@ app.use(cors());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/collections', require('./collections/collections.controller'));
+app.use('/bundles', require('./bundles/bundles.controller'));
 
 app.use('/echo', require('./_helpers/post-handler'))
 // global error handler
