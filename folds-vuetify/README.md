@@ -1,4 +1,4 @@
-# folds-front-end
+# folds-vuetify
 
 ## Project setup
 ```
