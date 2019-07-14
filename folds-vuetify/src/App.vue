@@ -5,40 +5,44 @@
         <span>Vuetify</span>
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
-      <v-btn
-        flat
-        to="/home"
-      >
+      <v-toolbar-items>
+      <v-btn flat to="/home">
         <span class="mr-2">Home</span>
       </v-btn>
-      <v-btn
-        flat
-        to="/login"
-      >
+      <v-btn flat to="/login">
         <span class="mr-2">Login</span>
       </v-btn>
-      <v-btn
-        flat
-        to="/login"
-      >
+      <v-btn flat to="/register">
         <span class="mr-2">Register</span>
       </v-btn>
-      <v-btn
-        flat
-        to="/about"
-      >
+      <v-btn flat to="/about">
         <span class="mr-2">About</span>
       </v-btn>
-      <v-btn
-        flat
-        to="/edit"
-      >
+      <v-btn flat to="/edit">
         <span class="mr-2">Edit</span>
       </v-btn>
+    </v-toolbar-items>
     </v-toolbar>
-    <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
+    <v-snackbar
+      v-model="alert.exists"
+      :color="alert.type"
+      :timeout="5000"
+      top
+    >
+      {{ alert.message }}
+      <v-btn
+        dark
+        flat
+        @click="clearAlert"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+    <div :class="`alert ${alert.type}`">{{alert.message}}</div>
     <v-content>
-      <router-view/>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
     </v-content>
   </v-app>
 </template>
@@ -66,3 +70,10 @@ export default {
     } 
 };
 </script>
+
+<style scoped>
+.alert{
+  position: fixed;
+  top: 50px;  
+}
+</style>

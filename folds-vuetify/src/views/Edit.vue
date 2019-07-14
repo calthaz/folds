@@ -3,14 +3,25 @@
         <user-bio :fullName="account.user.fullName" :avatar="account.user.avatar" :bio="account.user.bio"></user-bio>
         <h3>Users from secure api end point:</h3>
         <em v-if="users.loading">Loading users...</em>
-        <span v-if="users.error" class="text-danger">ERROR: {{users.error}}</span>
-        <ul v-if="users.items">
-            <li v-for="user in users.items" :key="user.id">
-                 <img :src="user.avatar"/>
-                {{user.fullName}}
-                <router-link :to="'/u/'+user.username">Visit</router-link>
-            </li>
-        </ul>
+        <span v-if="users.error" class="error">ERROR: {{users.error}}</span>
+        <v-list two-line v-if="users.items">
+          <template v-for="(user, index) in users.items">      
+            <v-list-tile
+              :key="user.id"
+              avatar
+              :to="'/u/'+user.username"
+            >
+              <v-list-tile-avatar>
+                <img :src="user.avatar">
+              </v-list-tile-avatar>
+
+              <v-list-tile-content>
+                <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
+                <v-list-tile-sub-title v-html="user.bio"></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </template>
+        </v-list>
         <p>
             <router-link to="/login">Logout</router-link>
         </p>

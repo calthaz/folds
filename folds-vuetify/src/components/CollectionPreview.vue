@@ -1,7 +1,6 @@
 <template>
-    <div>
-        <span>{{name}}</span>
-        <router-link :to="'/u/'+username+'/'+name">Visit</router-link>
+    <v-card>
+        <v-card-title v-if="!collection" primary-title>{{name}}</v-card-title>
         <div v-if="loading" class="loading">
             Loading...
         </div>
@@ -10,13 +9,25 @@
             {{ error }}
         </div>
 
-        <div v-if="collection">
-            <img :src="$hostname+collection.bg">
-            <span>{{collection.intro}}</span>
-            <a v-if="deleteFunction" href="javascript:void(0)" 
-            @click="deleteFunction(collection.id)" class="text-danger">Delete</a>
+        <v-img v-if="collection" class="white--text" 
+        height="50px"
+        :src="$hostname+collection.bg">
+                <v-container fill-height fluid>
+                    <v-layout fill-height>
+                    <v-flex xs12 align-end flexbox>
+                        <span class="headline">{{name}}</span>
+                    </v-flex>
+                    </v-layout>
+                </v-container>
+        </v-img>
+            <v-card-title v-if="collection">{{collection.intro}}</v-card-title>
+            <v-card-actions v-if="collection" >
+                <v-btn flat :to="'/u/'+username+'/'+name">Visit</v-btn>
+                <v-btn v-if="deleteFunction"flat color="warning" 
+                @click="deleteFunction(collection.id)">Delete</v-btn>
+            </v-card-actions>
         </div>
-    </div>
+    </v-card>
 </template>
 
 <script>
