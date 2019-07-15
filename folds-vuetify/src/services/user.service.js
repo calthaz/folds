@@ -15,6 +15,8 @@ export const userService = {
     updateAvatar,
     addCollection,
     deleteCollection,
+    getAllCollectionNames,
+    getUsername,
     addBundle,
     deleteBundle,
     delete: _delete
@@ -90,7 +92,11 @@ function update(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/users/${user._id}`, requestOptions).then(handleResponse)
+    .then(user => {
+        localStorage.setItem('user', JSON.stringify(user));
+        return user;
+    });
 }
 
 function updateAvatar(id, formData) {
@@ -112,6 +118,30 @@ function updateAvatar(id, formData) {
         // add url field
         //.then(x => x.map(img => Object.assign({},
             //img, { url: `${BASE_URL}/images/${img.id}` })));
+}
+
+function getAllCollectionNames(){
+    const url = `${apiUrl}/users/getCollections`;
+    const user = JSON.parse(localStorage.getItem('user'));
+    var config = {
+        headers: authHeader()
+    }
+    //console.log(formData);
+    return axios.post(url, {id:user._id}, config)
+        // get data
+        .then(x => x.data)
+        .then(allCollections => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.collections = allCollections;
+            localStorage.setItem('user', JSON.stringify(user));
+            return allCollections;
+        })
+}
+
+function getUsername(){
+    //const url = `${apiUrl}/users/getCollections`;
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user.username;
 }
 
 function addCollection(id, collection){

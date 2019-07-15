@@ -3,8 +3,14 @@ import { router } from '../router';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const state = user
-    ? { status: { loggedIn: true }, user }
-    : { status: {}, user: null };
+    ? { status: { 
+        loggingIn: false,
+        loggedIn: true,
+        registering: false,
+        updating:false,
+        dirty: false }, 
+        user }
+    : { status: {loggingIn: false}, user: null };
 
 const actions = {
     login({ dispatch, commit }, { username, password }) {
@@ -46,6 +52,24 @@ const actions = {
                 }
             );
     },
+    update({ dispatch, commit }){
+        commit('updateRequest');
+        return userService.update(state.user)
+        .then(
+            user => {
+                commit('updateSuccess');
+                //router.push('/login');
+                dispatch('alert/success', 'Update successful.', { root: true });
+                return new Promise(function(resolve, reject) {
+                    resolve(user);
+                });
+            },
+            error => {
+                commit('updateFailure', error);
+                dispatch('alert/error', error, { root: true });
+            }
+        );
+    },
     updateAvatar({ dispatch, commit }, {id, formData}) {
         commit('updateRequest');
         //console.log('account module');
@@ -54,7 +78,7 @@ const actions = {
                 image => {
                     commit('updateSuccess');
                     //router.push('/login');
-                    dispatch('alert/success', 'Update successful.', { root: true });
+                    dispatch('alert/success', 'Update avatar successful.', { root: true });
                     return new Promise(function(resolve, reject) {
                         resolve(image);
                     });
@@ -74,6 +98,7 @@ const actions = {
                     commit('updateSuccess');
                     //router.push('/login');
                     dispatch('alert/success', 'Add collection successful.', { root: true });
+                    dispatch('collections/getAll', null, { root: true });
                     return new Promise(function(resolve, reject) {
                         resolve(collections);
                     });
@@ -93,6 +118,7 @@ const actions = {
                     commit('updateSuccess');
                     //router.push('/login');
                     dispatch('alert/success', 'Delete collection successful.', { root: true });
+                    dispatch('collections/getAll', null, { root: true });
                     return new Promise(function(resolve, reject) {
                         resolve(collections);
                     });
@@ -145,39 +171,51 @@ const actions = {
 
 const mutations = {
     loginRequest(state, user) {
-        state.status = { loggingIn: true };
+        Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.loggingIn = true;
         state.user = user;
     },
     loginSuccess(state, user) {
-        state.status = { loggedIn: true };
+        Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.loggedIn = true;
         state.user = user;
     },
     loginFailure(state) {
-        state.status = {};
+        Object.keys(state.status).forEach(v => state.status[v] = false);
         state.user = null;
     },
     logout(state) {
-        state.status = {};
+        Object.keys(state.status).forEach(v => state.status[v] = false);
         state.user = null;
     },
     registerRequest(state, user) {
-        state.status = { registering: true };
+        Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.registering = true;
     },
     registerSuccess(state, user) {
-        state.status = {};
+        Object.keys(state.status).forEach(v => state.status[v] = false);
     },
     registerFailure(state, error) {
-        state.status = {};
+        Object.keys(state.status).forEach(v => state.status[v] = false);
+    },
+    setDirty(state){
+        state.status.dirty = true;
     },
     updateRequest(state){
-        state.status = {updating: true};
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        //state.status.loggedIn = true;
+        state.status.updating = true;
     },
     updateSuccess(state, user) {
-        state.status = {};
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.updating = false;
+        //state.status.loggedIn = true;
         state.user = JSON.parse(localStorage.getItem('user'));
     },
     updateFailure(state, error) {
-        state.status = {};
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.updating = false;
+        //state.status.loggedIn = true;
     },
 };
 

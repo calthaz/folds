@@ -17,6 +17,7 @@ router.get('/:idOrName', getByIdOrName);
 router.put('/:id', jwt(), update);
 router.delete('/:id', _delete);
 router.post('/uploadAvatar', jwt(), upload.single('avatar'), updateAvatar);
+router.post('/getCollections', jwt(), getAllCollectionNames);
 router.post('/addCollection', jwt(), addCollection);
 router.post('/deleteCollection', jwt(), deleteCollection);
 router.post('/addBundle', jwt(), addBundle);
@@ -71,7 +72,7 @@ function getByIdOrName(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then((user) => res.json(user))
         .catch(err => next(err));
 }
 
@@ -113,6 +114,14 @@ function addCollection(req, res, next){
 
 function deleteCollection(req, res, next){
     userService.deleteCollection(req.body.collectionId)
+    .then((user) => {
+        res.json(user.collections)
+    })
+    .catch(err => next(err));
+}
+
+function getAllCollectionNames(req, res, next){
+    userService.getAllCollectionNames(req.body.id)
     .then((user) => {
         res.json(user.collections)
     })

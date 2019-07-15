@@ -1,6 +1,6 @@
 <template>
 <v-flex md6>
-    <v-card>
+    <v-card flat>
         <v-card-title v-if="!collection" primary-title>{{name}}</v-card-title>
         <div v-if="loading" class="loading">
             Loading...
@@ -21,12 +21,17 @@
                     </v-layout>
                 </v-container>
         </v-img>
-            <v-card-title v-if="collection">{{collection.intro}}</v-card-title>
-            <v-card-actions v-if="collection" >
-                <v-btn flat :to="'/editCollection/'+name">Visit</v-btn>
-                <v-btn v-if="deleteFunction" flat color="warning" 
-                @click="deleteFunction(collection.id)">Delete</v-btn>
-            </v-card-actions>
+        <v-card-title v-if="collection">{{collection.intro}}</v-card-title>
+        <v-card-actions v-if="collection" >
+            <v-btn flat :to="'/editCollection/'+name">Visit</v-btn>
+            <v-btn v-if="deleteFunction" flat color="warning" 
+            @click="deleteFunction(collection.id)">Delete</v-btn>
+        </v-card-actions>
+        <v-list two-line>
+            <bundle-preview v-for="bundle in collection.bundles" :key="bundle.id"
+            :bid='bundle.id' :type="bundle.type">
+            </bundle-preview>
+        </v-list> 
     </v-card>
 </v-flex>
 </template>
@@ -35,10 +40,13 @@
 import {collectionService} from '../services/collection.service';
 import * as axios from 'axios';
 import {apiUrl} from '../helpers/api-config'
-
+import BundlePreview from '../components/BundlePreview.vue'
 
 export default {
     name: 'CollectionEdit',
+    components: {
+        BundlePreview,
+    },
     props: {
         name: String,
         username: String,

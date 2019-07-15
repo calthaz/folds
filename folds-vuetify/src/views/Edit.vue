@@ -31,21 +31,41 @@
             </collection-edit>
         </v-layout> 
         <collection-creator></collection-creator> 
-
-        <h2>Image Bundles:</h2>
-        <v-list two-line>
-            <bundle-edit v-for="bundle in account.user.imageBundles" :key="bundle"
-            :bid='bundle' :type="'image'" v-bind:deleteFunction="deleteBundle">
-            </bundle-edit>
-        </v-list> 
-        <image-bundle-creator></image-bundle-creator>
-        <h2>Text Bundles:</h2>
-        <v-list two-line>
-            <bundle-edit v-for="bundle in account.user.textBundles" :key="bundle"
-            :bid='bundle' :type="'text'" v-bind:deleteFunction="deleteBundle">
-            </bundle-edit>
-        </v-list> 
-        <text-bundle-creator></text-bundle-creator> 
+        <v-layout row wrap>
+            <v-flex md6>
+                <h2>Image Bundles:</h2>
+                <v-list two-line>
+                    <draggable :list="account.user.imageBundles" group="imageBundles"
+                    @change='dragged'>
+                        <bundle-edit v-for="bundle in account.user.imageBundles" :key="bundle"
+                        :bid='bundle' :type="'image'" v-bind:deleteFunction="deleteBundle">
+                        </bundle-edit>
+                    </draggable>
+                </v-list> 
+                <image-bundle-creator></image-bundle-creator>
+            </v-flex>
+            <v-flex md6>
+                <h2>Text Bundles:</h2>
+                <v-list two-line>
+                    <draggable :list="account.user.textBundles" group="textBundles"
+                    @change='dragged'>
+                        <bundle-edit v-for="bundle in account.user.textBundles" :key="bundle"
+                        :bid='bundle' :type="'text'" v-bind:deleteFunction="deleteBundle">
+                        </bundle-edit>
+                    </draggable>
+                </v-list> 
+                <text-bundle-creator></text-bundle-creator> 
+            </v-flex>
+        </v-layout>    
+        <v-fab-transition>
+            <v-btn
+            v-show="dirty"
+            color="success"
+            fab dark fixed bottom right
+            @click="updateUser">
+            <v-icon>save</v-icon>
+            </v-btn>
+        </v-fab-transition>
     </div>
 </template>
 
@@ -57,11 +77,12 @@ import CollectionEdit from '../components/CollectionEdit.vue'
 import ImageBundleCreator from '../components/ImageBundleCreator.vue'
 import TextBundleCreator from '../components/TextBundleCreator.vue'
 import BundleEdit from '../components/BundleEdit.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import * as axios from 'axios';
 import { authHeader } from '../helpers/index'
 import { userService } from '../services/user.service';
 import { collectionService } from '../services/collection.service';
+import draggable from "vuedraggable";
 
 export default {
     components:{
@@ -71,30 +92,46 @@ export default {
         CollectionEdit,
         ImageBundleCreator,
         TextBundleCreator,
-        BundleEdit
+        BundleEdit,
+        draggable
     },
-
+    data(){
+        return {
+            dirty: false
+        }
+    },
     computed: {
         ...mapState({
             account: state => state.account,
-            users: state => state.users.all
+            users: state => state.users.all,
+            dirty: state => state.account.status.dirty
+            //collections: state => state.collections.all,
         }),
         
     },
     created () {
         this.getAllUsers();
+        //this.getAllCollections();
     },
     methods: {
         ...mapActions('users', {
             getAllUsers: 'getAll',
-            deleteUser: 'delete'
+            //deleteUser: 'delete'
         }),
         ...mapActions('account', {
             uploadAvatar: 'updateAvatar',
             deleteCollection: 'deleteCollection',
-            deleteBundle: 'deleteBundle'
+            deleteBundle: 'deleteBundle',
+            updateUser: 'update'
         }),
+        //...mapMutations('account', ['setDirty']),
+        //...mapActions('collections', {
+            //getAllCollections: 'getAll'}),
         //deleteCollection: collectionService.delete //should be an account update method....
+        dragged(){
+           // console.log(this.$store.state.account.user.textBundles);
+            this.dirty=true;         
+        }
     }
 };
 </script>

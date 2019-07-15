@@ -14,6 +14,7 @@ module.exports = {
     create,
     update,
     //updateAvatar,
+    getAllCollectionNames,
     addCollection,
     deleteCollection,
     addBundle,
@@ -86,6 +87,16 @@ async function update(id, userParam) {
     Object.assign(user, userParam);
 
     await user.save();
+
+    return user;
+}
+
+async function getAllCollectionNames(id){
+    const user = await User.findById(id);
+    // validate
+    if (!user) throw 'User not found';
+
+    return await User.findById(id).select('collections');
 }
 
 async function addCollection(id, collection){
