@@ -122,10 +122,10 @@ const actions = {
                 }
             );
     },
-    deleteBundle({ dispatch, commit }, {type, bundleId}) {
+    deleteBundle({ dispatch, commit }, {type, id}) {
         commit('updateRequest');
         //console.log('account module');
-        return userService.deleteBundle(type, bundleId)
+        return userService.deleteBundle(type, id)
             .then(
                 bundles => {
                     commit('updateSuccess');

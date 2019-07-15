@@ -1,6 +1,6 @@
 <template>
 <v-list-tile
-    avatar :to="'/editBundle/'+bid">
+    avatar>
     <v-list-tile-avatar>
     <img v-if="bundle && bundle.image" :src="$hostname+bundle.image">
     </v-list-tile-avatar>
@@ -13,10 +13,12 @@
         </div>
         <v-list-tile-title v-if="bundle" v-html="bundle.title"></v-list-tile-title>
         <v-list-tile-sub-title v-if="!bundle" v-html="bid"></v-list-tile-sub-title>
-        <v-list-tile-sub-title v-if="bundle" v-html="bundle.createdDate"></v-list-tile-sub-title>
+        <v-list-tile-sub-title v-if="bundle" v-html="bundle.createdDate.substr(0,10)"></v-list-tile-sub-title>
     </v-list-tile-content>
-    <v-btn v-if="deleteFunction" flat color="warning" 
-                @click="deleteFunction(type, bundle.id)">Delete</v-btn>
+    <v-list-tile-action>
+        <router-link :to="'/editBundle/'+bid"><v-icon >edit</v-icon></router-link>
+        <v-icon :color="'warning'" @click="deleteFunction({type, id:bundle._id})">delete</v-icon>
+    </v-list-tile-action>
 </v-list-tile>
 </template>
 

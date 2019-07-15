@@ -15,11 +15,8 @@
       <v-btn flat to="/register">
         <span class="mr-2">Register</span>
       </v-btn>
-      <v-btn flat to="/about">
-        <span class="mr-2">About</span>
-      </v-btn>
       <v-btn flat to="/edit">
-        <span class="mr-2">Edit</span>
+        <v-icon class="mr-2">edit</v-icon>
       </v-btn>
     </v-toolbar-items>
     </v-toolbar>

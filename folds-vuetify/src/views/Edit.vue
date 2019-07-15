@@ -91,7 +91,8 @@ export default {
         }),
         ...mapActions('account', {
             uploadAvatar: 'updateAvatar',
-            deleteCollection: 'deleteCollection'
+            deleteCollection: 'deleteCollection',
+            deleteBundle: 'deleteBundle'
         }),
         //deleteCollection: collectionService.delete //should be an account update method....
     }

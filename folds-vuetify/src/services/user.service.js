@@ -120,7 +120,7 @@ function addCollection(id, collection){
         headers: authHeader()
     }
     //console.log(formData);
-    return axios.post(url, {id, collection}, config)
+    return axios.post(url, {id, collection:{...collection}}, config)
         // get data
         .then(x => x.data)
         .then(allCollections => {
@@ -155,7 +155,7 @@ function addBundle(id, type, bundle){
         headers: authHeader()
     }
     //console.log(formData);
-    return axios.post(url, {id, type, bundle}, config)
+    return axios.post(url, {id, type, bundle:{...bundle}}, config)
         // get data
         .then(x => x.data)
         .then(allBundles => {
@@ -172,7 +172,7 @@ function addBundle(id, type, bundle){
 }
 
 function deleteBundle(type, bundleId){
-    //console.log('user.service');
+    console.log('user.service');
     const url = `${apiUrl}/users/deleteBundle`;
     var config = {
         headers: authHeader()
