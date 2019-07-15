@@ -36,9 +36,9 @@
                 <h2>Image Bundles:</h2>
                 <v-list two-line>
                     <draggable :list="account.user.imageBundles" group="imageBundles"
-                    @change='dragged'>
-                        <bundle-edit v-for="bundle in account.user.imageBundles" :key="bundle"
-                        :bid='bundle' :type="'image'" v-bind:deleteFunction="deleteBundle">
+                    @change='setDirty'>
+                        <bundle-edit v-for="bundle in account.user.imageBundles" :key="bundle.id"
+                        :bid='bundle.id' :type="'image'" v-bind:deleteFunction="deleteBundle">
                         </bundle-edit>
                     </draggable>
                 </v-list> 
@@ -48,9 +48,9 @@
                 <h2>Text Bundles:</h2>
                 <v-list two-line>
                     <draggable :list="account.user.textBundles" group="textBundles"
-                    @change='dragged'>
-                        <bundle-edit v-for="bundle in account.user.textBundles" :key="bundle"
-                        :bid='bundle' :type="'text'" v-bind:deleteFunction="deleteBundle">
+                    @change='setDirty'>
+                        <bundle-edit v-for="bundle in account.user.textBundles" :key="bundle.id"
+                        :bid='bundle.id' :type="'text'" v-bind:deleteFunction="deleteBundle">
                         </bundle-edit>
                     </draggable>
                 </v-list> 
@@ -58,9 +58,7 @@
             </v-flex>
         </v-layout>    
         <v-fab-transition>
-            <v-btn
-            v-show="dirty"
-            color="success"
+            <v-btn v-show="dirty" color="success"
             fab dark fixed bottom right
             @click="updateUser">
             <v-icon>save</v-icon>
@@ -95,11 +93,6 @@ export default {
         BundleEdit,
         draggable
     },
-    data(){
-        return {
-            dirty: false
-        }
-    },
     computed: {
         ...mapState({
             account: state => state.account,
@@ -111,7 +104,7 @@ export default {
     },
     created () {
         this.getAllUsers();
-        //this.getAllCollections();
+       
     },
     methods: {
         ...mapActions('users', {
@@ -124,14 +117,7 @@ export default {
             deleteBundle: 'deleteBundle',
             updateUser: 'update'
         }),
-        //...mapMutations('account', ['setDirty']),
-        //...mapActions('collections', {
-            //getAllCollections: 'getAll'}),
-        //deleteCollection: collectionService.delete //should be an account update method....
-        dragged(){
-           // console.log(this.$store.state.account.user.textBundles);
-            this.dirty=true;         
-        }
+        ...mapMutations('account', {setDirty: 'setDirty'}),
     }
 };
 </script>

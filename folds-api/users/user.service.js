@@ -87,8 +87,13 @@ async function update(id, userParam) {
     Object.assign(user, userParam);
 
     await user.save();
-
-    return user;
+    
+    const { hash, ...userWithoutHash } = user.toObject();
+    const token = jwt.sign({ sub: user.id }, config.secret);
+    return {
+        ...userWithoutHash,
+        token
+    };
 }
 
 async function getAllCollectionNames(id){
@@ -160,7 +165,7 @@ async function addBundle(id, bundleType, bundle){
     if(bundleType=="image"){
         //console.log("add image bundle");
         await User.updateOne({ _id: id }, 
-                { $push: { imageBundles: createdBundle.id } }, 
+                { $addToSet: { imageBundles: {id: createdBundle.id, title: createdBundle.title} } }, 
                 (err, result) => { 
                     updateError = err;
                     updateResult = result;
@@ -168,7 +173,7 @@ async function addBundle(id, bundleType, bundle){
     }else if(bundleType=="text"){
         //console.log("add text bundle");
         await User.updateOne({ _id: id }, 
-            { $push: { textBundles: createdBundle.id } }, 
+            { $addToSet: { textBundles: {id: createdBundle.id, title: createdBundle.title } }}, 
             (err, result) => { 
                 updateError = err;
                 updateResult = result;
@@ -187,6 +192,8 @@ async function addBundle(id, bundleType, bundle){
     return await User.findById(id).select(`${bundleType}Bundles`);
 }
 
+/** Bug: remember to delete bundle from collections that contain it 
+ * or disable deleting such bundles */
 async function deleteBundle(bundleType, bundleId){
     //console.log(collectionId);
     const bundle = await bundleService.getByTypeAndId(bundleType, bundleId);
@@ -199,14 +206,14 @@ async function deleteBundle(bundleType, bundleId){
     let updateResult = null;
     if(bundleType=="image"){
         await User.updateOne({ _id: user.id }, 
-                { $pull: { imageBundles: bundle.id } }, 
+                { $pull: { imageBundles: {id:bundle.id, title: bundle.title} } }, 
                 (err, result) => { 
                     updateError = err;
                     updateResult = result;
                 });
     }else if(bundleType=="text"){
         await User.updateOne({ _id: user.id }, 
-            { $pull: { textBundles: bundle.id } }, 
+            { $pull: { textBundles: {id:bundle.id, title: bundle.title} } }, 
             (err, result) => { 
                 updateError = err;
                 updateResult = result;

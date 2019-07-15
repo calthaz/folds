@@ -1,7 +1,10 @@
 import { collectionService, userService } from '../services/index';
 
 const state = {
-    status: null,
+    status:{ 
+        loading: false,
+        updating:false,
+        dirty: false},
     all: []
 };
 
@@ -17,22 +20,71 @@ const actions = {
                     error => commit('addFailure', error)
                 );
             }
+        }).then(()=>{
+            commit('getAllFinished');
         })
+    },
+    update({ dispatch, commit }, collection){
+        commit('updateRequest');
+        return collectionService.update(collection)
+        .then(
+            collection => {
+                commit('updateSuccess');
+                //dispatch('account/update')
+                //router.push('/login');
+                commit('setClean');
+                dispatch('alert/success', 'Update collection successful.', { root: true });
+                return new Promise(function(resolve, reject) {
+                    resolve(collection);
+                });
+            },
+            error => {
+                commit('updateFailure', error);
+                dispatch('alert/error', error, { root: true });
+            }
+        );
     },
 };
 
 const mutations = {
     getAllRequest(state) {
-        state.status = { loading: true };
+        Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.loading = true;
         state.all=[];
     },
+    getAllFinished(state) {
+        state.status.loading = false;
+    },
     addToCollections(state, collection) {
-        state.status = { loading: false };
         state.all.push(collection);
     },
     addFailure(state, error) {
-        state.status = { error };
-    }
+        state.status.error = error;
+    },
+    updateRequest(state){
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        //state.status.loggedIn = true;
+        state.status.updating = true;
+    },
+    updateSuccess(state, user) {
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.updating = false;
+        //state.status.loggedIn = true;
+        //state.user = JSON.parse(localStorage.getItem('user'));
+    },
+    updateFailure(state, error) {
+        //Object.keys(state.status).forEach(v => state.status[v] = false);
+        state.status.updating = false;
+        //state.status.loggedIn = true;
+    },
+    setDirty(state){
+        console.log("collection dirty");
+        state.status.dirty = true;
+    },
+    setClean(state){
+        console.log("collection clean");
+        state.status.dirty = false;
+    },
 };
 
 export const collections = {

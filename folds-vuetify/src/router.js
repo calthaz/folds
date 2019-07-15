@@ -6,6 +6,7 @@ import RegisterPage from './views/Register.vue'
 import EditPage from './views/Edit.vue'
 import OverviewPage from './views/Overview.vue'
 import CollectionPage from './views/Collection.vue'
+import EditCollection from './views/EditCollection.vue'
 
 Vue.use(Router)
 
@@ -31,6 +32,7 @@ export const router = new Router({
     { path: '/edit', component: EditPage },
     { path: '/u/:username', component: OverviewPage}, 
     { path: '/u/:username/:collectionName', component: CollectionPage},
+    { path: '/editCollection/:collectionName', component: EditCollection},
     // otherwise redirect to home
     { path: '*', redirect: '/' }
   ]

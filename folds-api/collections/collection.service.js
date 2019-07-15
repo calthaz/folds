@@ -45,8 +45,9 @@ async function update(id, collectionParam) {
     const collection = await Collection.findById(id);
 
     // validate
-    if (!collection) throw 'collection not found';
-
+    if (!collection) throw 'Collection not found';
+    if (collectionParam.name && (collection.name !== collectionParam.name))
+        throw 'Please change collection name in Edit User Page.'
     // copy collectionParam properties to collection
     Object.assign(collection, collectionParam);
 

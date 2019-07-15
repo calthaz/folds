@@ -60,6 +60,7 @@ const actions = {
                 commit('updateSuccess');
                 //router.push('/login');
                 dispatch('alert/success', 'Update successful.', { root: true });
+                commit('setClean');
                 return new Promise(function(resolve, reject) {
                     resolve(user);
                 });
@@ -199,7 +200,11 @@ const mutations = {
         Object.keys(state.status).forEach(v => state.status[v] = false);
     },
     setDirty(state){
+        console.log('set dirty in account.module')
         state.status.dirty = true;
+    },
+    setClean(state){
+        state.status.dirty = false;
     },
     updateRequest(state){
         //Object.keys(state.status).forEach(v => state.status[v] = false);

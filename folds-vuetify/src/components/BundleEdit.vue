@@ -12,7 +12,7 @@
             {{ error }}
         </div>
         <v-list-tile-title v-if="bundle" v-html="bundle.title"></v-list-tile-title>
-        <v-list-tile-sub-title v-if="!bundle" v-html="bid"></v-list-tile-sub-title>
+        <v-list-tile-sub-title v-if="bundle" v-html="bid"></v-list-tile-sub-title>
         <v-list-tile-sub-title v-if="bundle" v-html="bundle.createdDate.substr(0,10)"></v-list-tile-sub-title>
     </v-list-tile-content>
     <v-list-tile-action>
