@@ -147,7 +147,7 @@ async function addBundle(id, bundleType, bundle){
     let updateError = null;
     let updateResult = null;
     if(bundleType=="image"){
-        console.log("add image bundle");
+        //console.log("add image bundle");
         await User.updateOne({ _id: id }, 
                 { $push: { imageBundles: createdBundle.id } }, 
                 (err, result) => { 
@@ -155,7 +155,7 @@ async function addBundle(id, bundleType, bundle){
                     updateResult = result;
                 });
     }else if(bundleType=="text"){
-        console.log("add text bundle");
+        //console.log("add text bundle");
         await User.updateOne({ _id: id }, 
             { $push: { textBundles: createdBundle.id } }, 
             (err, result) => { 
@@ -165,7 +165,7 @@ async function addBundle(id, bundleType, bundle){
     }else {
         throw "Bundle type not supported."
     }
-    console.log(updateResult);
+    //console.log(updateResult);
     if(updateError) {
         bundleService.delete(createdBundle.id);
         throw updateError;

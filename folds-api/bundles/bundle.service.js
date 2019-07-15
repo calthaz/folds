@@ -60,6 +60,11 @@ async function update(type, id, bundleParam) {
     await bundle.save();
 }
 
-async function _delete(id) {
-    await Collection.findByIdAndRemove(id);
+async function _delete(type, id) {
+    if(type=="image"){
+        await ImageBundle.findByIdAndRemove(id); 
+    }else if(type=="text"){
+        //console.log(id);
+        await TextBundle.findByIdAndRemove(id); 
+    }
 }

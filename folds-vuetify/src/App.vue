@@ -3,11 +3,11 @@
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
         <span>Folds</span>
-        <span class="font-weight-light">Your Portfolio</span>
+        <span class="font-weight-light">Portfolio</span>
       </v-toolbar-title>
       <v-toolbar-items>
       <v-btn flat to="/home">
-        <span class="mr-2">Home</span>
+        <v-icon class="mr-2">home</v-icon>
       </v-btn>
       <v-btn flat to="/login">
         <span class="mr-2">Login</span>
