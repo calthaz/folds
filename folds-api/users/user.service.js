@@ -202,6 +202,11 @@ async function deleteBundle(bundleType, bundleId){
     const user = await User.findOne({username: bundle.owner});
     if (!user) throw 'User not found.';
 
+    for(let colName of user.collections){
+        collectionService.deleteContainedBundleByUserAndName(
+            user.username, colName, bundleType, bundleId);
+    }
+
     let updateError=null;
     let updateResult = null;
     if(bundleType=="image"){

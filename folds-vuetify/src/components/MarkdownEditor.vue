@@ -1,6 +1,10 @@
 <template>
     <div id="editor">
-        <textarea :value="input" @input="update"></textarea>
+        <v-textarea
+            label="Markdown"
+            auto-grow
+            :value="input" @input="update"
+        ></v-textarea>
         <div v-html="compiledMarkdown"></div>
     </div>
 </template>
@@ -30,7 +34,7 @@ export default {
     },
     methods: {
         update: lodashDebounce(function (e) {
-            this.input = e.target.value;
+            this.input = e;
             this.callback();
         }, 300)
     }

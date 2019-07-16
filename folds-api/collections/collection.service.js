@@ -12,6 +12,7 @@ module.exports = {
     getOwnerOf,
     create,
     update,
+    deleteContainedBundleByUserAndName,
     delete: _delete
 };
 
@@ -72,6 +73,23 @@ async function update(id, collectionParam) {
     Object.assign(collection, collectionParam);
 
     await collection.save();
+}
+
+async function deleteContainedBundleByUserAndName(username, colName, bundleType, bundleId){
+    const collection = await Collection.findOne({ owner: username, name: colName });
+    if (!collection) throw 'Collection not found';
+    if(collection.bundles){
+        for(let i = 0; i<collection.bundles.length; i++){
+            let bundle = collection.bundles[i];
+            if(bundle.type===bundleType && bundle.id===bundleId){
+                console.log(`delete bundle ${bundleId} from ${colName}`);
+                collection.bundles.splice(i, 1);
+                i--;
+            }
+        }
+    }
+    await collection.save();
+    
 }
 
 async function _delete(id) {
