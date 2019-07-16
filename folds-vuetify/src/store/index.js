@@ -5,6 +5,7 @@ import { alert } from './alert.module';
 import { account } from './account.module';
 import { users } from './users.module';
 import { collections } from './collections.module';
+import { bundles } from './bundles.module';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export const store = new Vuex.Store({
         alert,
         account,
         users,
-        collections
+        collections,
+        bundles
     }
 });

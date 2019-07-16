@@ -9,6 +9,7 @@ export const bundleService = {
     getByTypeAndId,
     //getByUserAndName,
     update,
+    updateImage
     //delete: _delete
 };
 
@@ -19,7 +20,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch(`${apiUrl}/collections`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/bundles`, requestOptions).then(handleResponse);
 }
 
 
@@ -38,17 +39,39 @@ function getByUserAndName(username, name) {
         headers: authHeader()
     };
 
-    return fetch(`${apiUrl}/collections/${username}/${name}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/bundles/${username}/${name}`, requestOptions).then(handleResponse);
 }
 
-function update(bundle) {
+function update(type, bundle) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(bundle)
     };
 
-    return fetch(`${apiUrl}/bundles/${bundle.id}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/bundles/${type}/${bundle.id}`, requestOptions).then(handleResponse);
+}
+
+function updateImage(id, prevBg, formData) {
+    const url = `${apiUrl}/bundles/updateImage`;
+    var config = {
+        headers: authHeader()
+    }
+    formData.append('id', id);
+    formData.append('prevBg', prevBg);
+    //console.log(formData);
+    return axios.post(url, formData, config)
+        // get data
+        .then(x => x.data)
+        .then(imagePath => {
+            //const user = JSON.parse(localStorage.getItem('user'));
+            //user.avatar = image.base64;
+            //localStorage.setItem('user', JSON.stringify(user));
+            return imagePath;
+        }).catch(handleResponse);
+        // add url field
+        //.then(x => x.map(img => Object.assign({},
+            //img, { url: `${BASE_URL}/images/${img.id}` })));
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -58,23 +81,27 @@ function update(bundle) {
         headers: authHeader()
     };
     console.log(id);
-    return fetch(`${apiUrl}/collections/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/bundles/${id}`, requestOptions).then(handleResponse);
 }*/
 
 function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
-                location.reload(true);
+    if(response.isAxiosError){
+        return Promise.reject(response);
+    }else{
+        return response.text().then(text => {
+            const data = text && JSON.parse(text);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // auto logout if 401 response returned from api
+                    logout();
+                    location.reload(true);
+                }
+
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
             }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
+            return data;
+        });
+    }
 }

@@ -69,6 +69,7 @@ export default {
         handleSubmit(e) {
             if(this.$refs.form.validate()){
                 this.submitted = true;
+                //console.log(this.bundle.createdDate)
                 this.addBundle({id:this.user._id, type:'image', bundle:this.bundle});
             }
         }

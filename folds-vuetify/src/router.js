@@ -7,6 +7,8 @@ import EditPage from './views/Edit.vue'
 import OverviewPage from './views/Overview.vue'
 import CollectionPage from './views/Collection.vue'
 import EditCollection from './views/EditCollection.vue'
+import EditTextBundle from './views/EditTextBundle.vue'
+import EditImageBundle from './views/EditImageBundle.vue'
 
 Vue.use(Router)
 
@@ -33,6 +35,8 @@ export const router = new Router({
     { path: '/u/:username', component: OverviewPage}, 
     { path: '/u/:username/:collectionName', component: CollectionPage},
     { path: '/editCollection/:collectionName', component: EditCollection},
+    { path: '/editBundle/text/:bundleId', component: EditTextBundle},
+    { path: '/editBundle/image/:bundleId', component: EditImageBundle},
     // otherwise redirect to home
     { path: '*', redirect: '/' }
   ]

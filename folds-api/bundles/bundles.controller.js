@@ -6,13 +6,13 @@ const fs = require('fs');
 const fileHelper = require('../_helpers/file-helper');
 const jwt = require('../_helpers/jwt');
 const sharp = require('sharp');
-
+const upload = require('../_helpers/upload');
 
 // routes
 //router.get('/', getAll);
 router.get('/:type/:id', getByTypeAndId);
-
-//router.put('/:id', jwt(), update);
+router.put('/:type/:id', jwt(), update);
+router.post('/updateImage', jwt(), upload.single('image'), updateImage);
 //router.put('/:username/:name', jwt(), getByUserAndName);
 //router.delete('/:id', _delete);
 
@@ -40,11 +40,29 @@ function getByTypeAndId(req, res, next) {
 
 
 function update(req, res, next) {
-    bundleService.update(req.params.id, req.body)
+    bundleService.update(req.params.type, req.params.id, req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
 
+function updateImage(req, res, next) {
+    //const img = fs.readFileSync(req.file.path);
+    //console.log(req.file.path);
+    bundleService.getImageOwnerOf(req.body.id).then(username=>{
+         if(username){
+            const newRelPath = '/'+ path.join(username, path.parse(req.file.path).base);
+            const newAbsPath = path.join(req.file.path, "../../public", newRelPath);
+            fs.promises.mkdir(path.dirname(newAbsPath), {recursive: true})
+            .then(()=>{
+                fileHelper.moveFile(req.file.path, newAbsPath);
+                bundleService.update('image', req.body.id, {image: newRelPath});
+                res.json({path: newRelPath.replace(/\\/g, '/')});
+            })
+        }
+    }).catch( err => {
+        next(err);
+    });
+}
 
 function _delete(req, res, next) {
     bundleService.delete(req.params.id)

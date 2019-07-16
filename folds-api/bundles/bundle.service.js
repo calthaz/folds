@@ -2,12 +2,15 @@
 const db = require('_helpers/db');
 const ImageBundle = db.ImageBundle;
 const TextBundle = db.TextBundle;
+const fileHelper = require('../_helpers/file-helper');
+const path = require('path');
 
 module.exports = {
     //getAll,
     getByTypeAndId,
     create,
     update,
+    getImageOwnerOf,
     delete: _delete
 };
 
@@ -30,6 +33,15 @@ async function getByTypeAndId(type, id) {
     }
 }
 
+async function getImageOwnerOf(id){
+    const bundle = await ImageBundle.findById(id);
+
+    // validate
+    if (!bundle) throw 'Bundle not found';
+
+    return bundle.owner;
+}
+
 async function create(type, bundleParam) {
     //console.log(collectionParam);
     let bundle=null;
@@ -38,7 +50,7 @@ async function create(type, bundleParam) {
     }else if(type=="text"){
         bundle = new TextBundle(bundleParam);
     }
-    // save collection
+    // save bundle
     await bundle.save();
 
     return bundle;
@@ -54,7 +66,16 @@ async function update(type, id, bundleParam) {
     // validate
     if (!bundle) throw 'Bundle not found';
 
-    // copy collectionParam properties to collection
+    console.log(bundleParam.image + " | " + bundle.image);
+    if(bundleParam.image && (bundle.image !== bundleParam.image)){
+        if(bundle.image.indexOf('default')==-1){
+            console.log("delete previous file "+bundle.image);
+            await fileHelper.unlinkFile(path.join(__dirname, '../public', bundle.image))
+            .catch(err=> {throw err});
+        }
+    }
+
+    // copy collectionParam properties to bundle
     Object.assign(bundle, bundleParam);
 
     await bundle.save();

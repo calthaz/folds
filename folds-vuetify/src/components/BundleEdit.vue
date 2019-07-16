@@ -16,7 +16,7 @@
         <v-list-tile-sub-title v-if="bundle" v-html="bundle.createdDate.substr(0,10)"></v-list-tile-sub-title>
     </v-list-tile-content>
     <v-list-tile-action>
-        <router-link :to="'/editBundle/'+bid"><v-icon >edit</v-icon></router-link>
+        <router-link :to="'/editBundle/'+type+'/'+bid"><v-icon >edit</v-icon></router-link>
         <v-icon :color="'warning'" @click="deleteFunction({type, id:bundle._id})">delete</v-icon>
     </v-list-tile-action>
 </v-list-tile>

@@ -1,6 +1,14 @@
 <template>
     <div>
-        <user-bio :fullName="account.user.fullName" :avatar="account.user.avatar" :bio="account.user.bio"></user-bio>
+        <h1>Hi {{account.user.fullName}}!</h1>
+        <img :src="account.user.avatar"/>
+        <v-form ref="form" lazy-validation>
+                <v-textarea
+                label="Bio"
+                auto-grow
+                v-model="account.user.bio" @change="setDirty"
+                ></v-textarea>
+        </v-form>
         <p>
             <v-btn to="/login">Logout</v-btn>
         </p>

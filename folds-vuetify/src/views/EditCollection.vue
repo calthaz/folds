@@ -12,7 +12,7 @@
         
         <div v-if='collection'>    
             <v-img :src ='$hostname+collection.bg'/>
-            <image-upload form-title="Upload Background Image" upload-field-name = "bg" 
+            <image-upload form-title="Update Background Image" upload-field-name = "bg" 
                 v-bind:id="collection._id" :prev-path="collection.bg" v-bind:upload-function="uploadCollectionBg"></image-upload>
             <v-form ref="form" lazy-validation>
                 <v-textarea
@@ -66,7 +66,7 @@ export default {
         //collection: null,
         error: null,
         //dirty: false,
-        fab: false,
+        //fab: false,
         }
     },
     computed: {
@@ -118,7 +118,7 @@ export default {
     },
     watch: {
         // call again the method if the route changes
-        '$route': 'fetchData'
+        '$route': 'getAllCollections'
     },
     methods: {
         ...mapActions('collections', {
