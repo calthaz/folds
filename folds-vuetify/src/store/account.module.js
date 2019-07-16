@@ -71,7 +71,7 @@ const actions = {
             }
         );
     },
-    updateAvatar({ dispatch, commit }, {id, formData}) {
+    updateAvatar({ dispatch, commit }, {id,  formData}) {
         commit('updateRequest');
         //console.log('account module');
         return userService.updateAvatar(id, formData)

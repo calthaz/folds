@@ -9,7 +9,7 @@ const actions = {
         commit('success', message);
     },
     error({ commit }, error) {
-        //console.log('break point');
+        console.log('break point');
         if(error.isAxiosError){
             commit('error', error.response.data.message)
         }else{

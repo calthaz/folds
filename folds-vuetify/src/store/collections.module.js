@@ -13,7 +13,7 @@ const actions = {
         commit('getAllRequest');
         userService.getAllCollectionNames().then(nameList=> {
             for (let name of nameList){
-                console.log(userService.getUsername(), name)
+                //console.log(userService.getUsername(), name)
                 collectionService.getByUserAndName(userService.getUsername(), name)
                 .then(
                     collection => commit('addToCollections', collection),
@@ -43,6 +43,29 @@ const actions = {
                 dispatch('alert/error', error, { root: true });
             }
         );
+    },
+    updateBg({ dispatch, commit }, {id, prevPath, formData}) {
+        commit('updateRequest');
+        //console.log('collection module');
+        return collectionService.updateBg(id, prevPath, formData)
+            .then(
+                imagePath => {
+                    commit('updateSuccess');
+                    //router.push('/login');
+                    dispatch('alert/success', 'Update Background Image successful.', { root: true });
+
+                    commit('updateCollectionBg', {id, imagePath:imagePath.path});
+                    //commit('setDirty');
+                    return new Promise(function(resolve, reject) {
+                        resolve(imagePath);
+                    });
+                },
+                error => {
+                    commit('updateFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                    return Promise.reject(error);
+                }
+            );
     },
 };
 
@@ -85,6 +108,14 @@ const mutations = {
         console.log("collection clean");
         state.status.dirty = false;
     },
+    updateCollectionBg(state, info){
+        for (let collection of state.all){
+            if(collection._id===info.id){
+                collection.bg = info.imagePath;
+                break;
+            }
+        }
+    }
 };
 
 export const collections = {

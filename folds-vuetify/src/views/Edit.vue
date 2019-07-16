@@ -22,7 +22,7 @@
           </template>
         </v-list>
         <image-upload form-title="Upload Avatar" upload-field-name = "avatar" 
-        v-bind:upload-function="uploadAvatar"></image-upload>
+        v-bind:upload-function="uploadAvatar" :id="account.user._id"></image-upload>
 
         <h2>collections:</h2>
         <v-layout row wrap>

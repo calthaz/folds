@@ -1,12 +1,15 @@
 ﻿const config = require('config.json');
 const db = require('_helpers/db');
 const Collection = db.Collection;
+const fileHelper = require('../_helpers/file-helper');
+const path = require('path');
 
 module.exports = {
     getAll,
     getById,
     getByName,
     getByUserAndName,
+    getOwnerOf,
     create,
     update,
     delete: _delete
@@ -33,6 +36,15 @@ async function getByUserAndName(username, collectionname){
     return await Collection.findOne({ owner: username, name: collectionname });
 }
 
+async function getOwnerOf(id){
+    const collection = await Collection.findById(id);
+
+    // validate
+    if (!collection) throw 'Collection not found';
+
+    return collection.owner;
+}
+
 async function create(collectionParam) {
     //console.log(collectionParam);
     const collection = new Collection(collectionParam);
@@ -49,6 +61,14 @@ async function update(id, collectionParam) {
     if (collectionParam.name && (collection.name !== collectionParam.name))
         throw 'Please change collection name in Edit User Page.'
     // copy collectionParam properties to collection
+    console.log(collectionParam.bg + " | " + collection.bg);
+    if(collectionParam.bg && (collection.bg !== collectionParam.bg)){
+        if(collection.bg.indexOf('default')==-1){
+            console.log("delete previous file "+collection.bg);
+            await fileHelper.unlinkFile(path.join(__dirname, '../public', collection.bg))
+            .catch(err=> {throw err});
+        }
+    }
     Object.assign(collection, collectionParam);
 
     await collection.save();

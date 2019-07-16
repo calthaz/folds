@@ -12,7 +12,8 @@
         
         <div v-if='collection'>    
             <v-img :src ='$hostname+collection.bg'/>
-            
+            <image-upload form-title="Upload Background Image" upload-field-name = "bg" 
+                v-bind:id="collection._id" :prev-path="collection.bg" v-bind:upload-function="uploadCollectionBg"></image-upload>
             <v-form ref="form" lazy-validation>
                 <v-textarea
                 label="Introduction"
@@ -50,12 +51,14 @@ import { collectionService } from '../services/collection.service'
 import { userService } from '../services/user.service';
 import BundleEdit from '../components/BundleEdit.vue'
 import draggable from "vuedraggable";
+import ImageUpload from '../components/ImageUpload.vue'
 
 export default {
     components:{
         //CollectionHeader,
         BundleEdit,
-        draggable
+        draggable,
+        ImageUpload
     },
     data () {
         return {
@@ -120,7 +123,8 @@ export default {
     methods: {
         ...mapActions('collections', {
             getAllCollections: 'getAll',
-            updateCollection: 'update'}),
+            updateCollection: 'update',
+            uploadCollectionBg: 'updateBg'}),
         ...mapMutations('collections', ['setDirty']),
         addBundle(type, e){
             const id = e.slice(-24);

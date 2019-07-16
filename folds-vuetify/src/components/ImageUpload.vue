@@ -3,7 +3,9 @@
         <form enctype="multipart/form-data" novalidate>
             <h3>{{formTitle}}</h3>
             <div class="dropbox">
-                <input type="file" :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                <input type="file" :name="uploadFieldName" :disabled="isSaving" 
+                @change="filesChange($event.target.name, $event.target.files); 
+                fileCount = $event.target.files.length"
                 accept="image/*" class="input-file">
                 <p v-if="isInitial">
                 Drag your file(s) here to begin<br> or click to browse
@@ -44,23 +46,26 @@ const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED =
 export default {
     name: 'ImageUpload',
     props: {
+        id: String,
         formTitle: String,
         uploadFieldName: String,
         uploadFunction: Function,
-        callback: Function
+        callback: Function,
+        prevPath: String
     },
     data(){
         return{
             submitted: false,
             uploadedFiles: [],
             uploadError: null,
-            currentStatus: null
+            currentStatus: null,
+            fileCount: 0
         }
     },
     computed: {
-        ...mapState({
-            account: state => state.account,
-        }),
+        //...mapState({
+          //  account: state => state.account,
+        //}),
         isInitial() {
             return this.currentStatus === STATUS_INITIAL;
         },
@@ -86,12 +91,14 @@ export default {
             // upload data to the server
             //console.log(this.uploadedFiles);
             this.currentStatus = STATUS_SAVING;
-            this.uploadFunction({id:this.account.user._id, formData}).then(x => {
+            this.uploadFunction({id: this.id, prevPath: this.prevPath, formData}).then(x => {
                 this.uploadedFiles.push(x);
                 //console.log(x); //{url, base64}
                 this.currentStatus = STATUS_SUCCESS;
                 //TODO not actually working
-                //this.callback({id:this.account.user._id, image: x.base64});
+                if(this.callback){
+                    this.callback({id:this.id, prevPath: this.prevPath, image: x});
+                }
             })
             .catch(err => {
                 console.log(err);

@@ -32,7 +32,7 @@ const moveFile = (path, newPath, flags) =>
   renameFile(path, newPath)
     .catch(e => {
       if (e.code !== "EXDEV")
-        throw new e;
+        throw e;
 
       else
         return copyFile(path, newPath, flags)
