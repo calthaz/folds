@@ -5,11 +5,12 @@ const state = {
         loading: false,
         updating:false,
         dirty: false},
-    bundle: null
+    bundle: {}
 };
 
 const actions = {
     getByTypeAndId({ commit }, {id, type}) {
+        console.log('get current bundle');
         commit('getAllRequest');
         bundleService.getByTypeAndId(type, id).then(bundle=> {
             commit('getCurrentBundle', bundle);

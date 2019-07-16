@@ -1,6 +1,6 @@
 <template>
 <v-list-tile
-    avatar>
+    avatar :to="computedPath">
     <v-list-tile-avatar>
     <img v-if="bundle && bundle.image" :src="$hostname+bundle.image">
     </v-list-tile-avatar>
@@ -43,6 +43,21 @@ export default {
         // fetch the data when the view is created and the data is
         // already being observed
         this.fetchData()
+    },
+    computed: {
+        computedPath: function(){
+            let type = '';
+            if(this.bundle && this.bundle.image){
+                type='image';
+            }else if(this.bundle && this.bundle.markdown){
+                type='text';
+            }
+            if(this.bundle)
+                return `/u/${this.$route.params.username}/${this.$route.params.collectionName}/${type}/${this.bundle.id}`
+            return '';
+
+        }
+
     },
     watch: {
         // call again the method if the route changes

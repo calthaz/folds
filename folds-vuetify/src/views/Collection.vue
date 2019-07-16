@@ -13,6 +13,12 @@
             <collection-header :name='collection.name' :intro='collection.intro'
             :bg='collection.bg'> </collection-header>
         </div>
+        <router-view/>
+        <v-list two-line v-if="collection">
+            <bundle-preview v-for="bundle in collection.bundles" :key="bundle.id"
+            :bid='bundle.id' :type="bundle.type">
+            </bundle-preview>
+        </v-list> 
     </div>
 </template>
 
@@ -20,10 +26,12 @@
 import { mapState, mapActions } from 'vuex'
 import { collectionService } from '../services/collection.service'
 import CollectionHeader from '../components/CollectionHeader.vue'
+import BundlePreview from '../components/BundlePreview.vue'
 
 export default {
     components:{
         CollectionHeader,
+        BundlePreview
     },
 
     data () {
