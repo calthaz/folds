@@ -5,7 +5,7 @@ const state = {
         loading: false,
         updating:false,
         dirty: false},
-    bundle: {}
+    bundle: null
 };
 
 const actions = {
@@ -67,7 +67,7 @@ const mutations = {
     getAllRequest(state) {
         Object.keys(state.status).forEach(v => state.status[v] = false);
         state.status.loading = true;
-        state.all=[];
+        state.bundle = null;
     },
     getAllFinished(state) {
         state.status.loading = false;

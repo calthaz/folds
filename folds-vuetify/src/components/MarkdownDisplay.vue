@@ -19,7 +19,10 @@ export default {
         compiledMarkdown: function () {
             console.log('break');
             let bundle = this.$store.state.bundles.bundle;
-            return marked(bundle.markdown, { sanitize: true })
+            if(bundle && bundle.markdown)
+                return marked(bundle.markdown, { sanitize: true })
+            else
+                return "<p>Loading...<p>"
         }
     },
     methods: {
